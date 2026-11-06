@@ -1,4 +1,4 @@
-"""学習・検証用の画像1枚と正解ラベルを取り出す。"""
+"""学習・検証用の画像と正解ラベル、またはテスト用の画像とIDを取り出す。"""
 
 from pathlib import Path
 
@@ -48,3 +48,25 @@ class PlantDataset(Dataset):
 
         label = int(self.labels[index])
         return image, label
+
+
+class PlantTestDataset(Dataset):
+    """正解ラベルのないテスト画像と、その画像IDを返すDataset。"""
+
+    def __init__(self, dataframe, image_dir, transform):
+        self.dataframe = dataframe.reset_index(drop=True).copy()
+        self.image_dir = Path(image_dir)
+        self.transform = transform
+
+    def __len__(self):
+        return len(self.dataframe)
+
+    def __getitem__(self, index):
+        image_id = self.dataframe.iloc[index]["image_id"]
+        image_path = self.image_dir / f"{image_id}.jpg"
+        with Image.open(image_path) as original_image:
+            image = original_image.convert("RGB")
+        image = self.transform(image)
+
+        # 正解ラベルの代わりにIDを返し、予測と画像の対応を保つ。
+        return image, image_id
