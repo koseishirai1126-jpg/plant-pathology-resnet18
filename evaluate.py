@@ -34,12 +34,16 @@ def main():
     set_seed(config["seed"])
     _, valid_loader = make_dataloaders(
         args.data_dir, batch_size=config["batch_size"], seed=config["seed"],
+        model_name=config["model"],
     )
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     checkpoint_path = args.run_dir / "best.pt"
     model, checkpoint = load_trained_model(checkpoint_path, device)
+    if checkpoint["model_name"] != config["model"]:
+        raise ValueError("config.jsonとbest.ptのモデル名が一致しません。")
     device_name = torch.cuda.get_device_name(device) if device.type == "cuda" else "CPU"
     print(f"使用するデバイス: {device_name}", flush=True)
+    print(f"モデル: {checkpoint['model_name']}", flush=True)
     print(f"保存されたエポック: {checkpoint['epoch']}", flush=True)
 
     valid_loss, valid_auc, class_aucs, probabilities = validate(
@@ -56,6 +60,7 @@ def main():
         raise ValueError("再読み込み後の予測が保存時と一致しません。データ・前処理・環境を確認してください。")
 
     report = {
+        "model": checkpoint["model_name"],
         "checkpoint_sha256": hashlib.sha256(checkpoint_path.read_bytes()).hexdigest(),
         "epoch": checkpoint["epoch"],
         "saved_valid_auc": checkpoint["valid_auc"],

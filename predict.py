@@ -9,10 +9,9 @@ import numpy as np
 import pandas as pd
 import torch
 from torch.utils.data import DataLoader
-from torchvision.models import ResNet18_Weights
 
 from dataset import CLASS_NAMES, PlantTestDataset
-from model import load_trained_model
+from model import get_preprocess, load_trained_model
 
 
 def main():
@@ -39,18 +38,21 @@ def main():
     if set(test_df["image_id"]) != set(template["image_id"]):
         raise ValueError("テスト用と提出見本の画像IDが一致しません。")
 
-    transform = ResNet18_Weights.IMAGENET1K_V1.transforms()
-    dataset = PlantTestDataset(test_df, args.data_dir / "images", transform=transform)
-    loader = DataLoader(dataset, batch_size=args.batch_size, shuffle=False, num_workers=0)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     # 学習時の検証と同じcuDNNの設定を使う。
     torch.backends.cudnn.benchmark = False
     torch.backends.cudnn.deterministic = True
     checkpoint_path = args.run_dir / "best.pt"
     model, checkpoint = load_trained_model(checkpoint_path, device)
+    transform = get_preprocess(checkpoint["model_name"])
+    dataset = PlantTestDataset(test_df, args.data_dir / "images", transform=transform)
+    loader = DataLoader(dataset, batch_size=args.batch_size, shuffle=False, num_workers=0)
     device_name = torch.cuda.get_device_name(device) if device.type == "cuda" else "CPU"
     print(f"使用するデバイス: {device_name}", flush=True)
-    print(f"使用するモデル: epoch={checkpoint['epoch']} 検証AUC={checkpoint['valid_auc']:.6f}", flush=True)
+    print(
+        f"使用するモデル: {checkpoint['model_name']} epoch={checkpoint['epoch']} "
+        f"検証AUC={checkpoint['valid_auc']:.6f}", flush=True,
+    )
 
     image_ids = []
     probability_batches = []
@@ -83,6 +85,8 @@ def main():
     output_path.parent.mkdir(parents=True, exist_ok=True)
     submission.to_csv(output_path, index=False, mode="x")
     info = {
+        "model": checkpoint["model_name"],
+        "pretrained_weights": checkpoint["pretrained_weights"],
         "checkpoint_sha256": hashlib.sha256(checkpoint_path.read_bytes()).hexdigest(),
         "checkpoint_epoch": checkpoint["epoch"],
         "checkpoint_valid_auc": checkpoint["valid_auc"],

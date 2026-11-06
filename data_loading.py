@@ -5,9 +5,9 @@ from pathlib import Path
 import pandas as pd
 import torch
 from torch.utils.data import DataLoader
-from torchvision.models import ResNet18_Weights
 
 from dataset import CLASS_NAMES, PlantDataset
+from model import get_preprocess
 
 
 def load_split_dataframes(data_dir):
@@ -36,13 +36,13 @@ def load_split_dataframes(data_dir):
     return train_df, valid_df
 
 
-def make_dataloaders(data_dir, batch_size=32, seed=42):
+def make_dataloaders(data_dir, batch_size=32, seed=42, model_name="resnet18"):
     """同じ分割と前処理を使い、学習用だけ取り出す順番をシャッフルする。"""
     data_dir = Path(data_dir)
     train_df, valid_df = load_split_dataframes(data_dir)
 
     # 最初のベースラインは、両方とも同じ固定の前処理を使う。
-    transform = ResNet18_Weights.IMAGENET1K_V1.transforms()
+    transform = get_preprocess(model_name)
     train_dataset = PlantDataset(train_df, data_dir / "images", transform=transform)
     valid_dataset = PlantDataset(valid_df, data_dir / "images", transform=transform)
 

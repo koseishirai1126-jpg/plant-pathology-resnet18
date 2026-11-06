@@ -1,4 +1,4 @@
-"""検証用画像4枚で、学習済みResNet18の入力・出力・損失計算を確認する。"""
+"""検証用画像4枚で、指定したResNetの入力・出力・損失計算を確認する。"""
 
 import argparse
 from pathlib import Path
@@ -8,23 +8,24 @@ from torch import nn
 
 from data_loading import make_dataloaders
 from dataset import CLASS_NAMES
-from model import build_model
+from model import MODEL_NAMES, build_model
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--model", choices=MODEL_NAMES, default="resnet18")
     parser.add_argument("--data-dir", type=Path, default=Path("data"))
     args = parser.parse_args()
 
     torch.manual_seed(42)
-    train_loader, valid_loader = make_dataloaders(args.data_dir, batch_size=4)
+    train_loader, valid_loader = make_dataloaders(args.data_dir, batch_size=4, model_name=args.model)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"使用するデバイス: {device}", flush=True)
     if device.type == "cuda":
         print(f"GPU: {torch.cuda.get_device_name(device)}", flush=True)
 
     # 初回はImageNetの学習済み重みをダウンロードする。
-    model = build_model(pretrained=True).to(device)
+    model = build_model(pretrained=True, model_name=args.model).to(device)
     criterion = nn.CrossEntropyLoss()
 
     images, labels = next(iter(valid_loader))
@@ -55,7 +56,7 @@ def main():
     print(f"予測確率の形: {tuple(probabilities.shape)}")
     print(f"画像ごとの確率の合計: {probability_sums.cpu().tolist()}")
     print(f"損失（学習前の検証用4枚）: {loss.item():.6f}")
-    print("ResNet18の実画像での動作確認OK")
+    print(f"{args.model.replace('resnet', 'ResNet')}の実画像での動作確認OK")
 
 
 if __name__ == "__main__":

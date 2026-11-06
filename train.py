@@ -1,4 +1,4 @@
-"""ResNet18の学習・検証を行い、検証AUCが最も高いモデルを保存する。"""
+"""ResNet18・34・50の学習・検証を行い、検証AUCが最も高いモデルを保存する。"""
 
 import argparse
 import hashlib
@@ -21,7 +21,7 @@ from torch import nn
 
 from data_loading import make_dataloaders
 from dataset import CLASS_NAMES
-from model import build_model
+from model import MODEL_NAMES, build_model, get_model_weights
 
 
 def set_seed(seed):
@@ -127,6 +127,7 @@ def get_code_version():
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--model", choices=MODEL_NAMES, default="resnet18")
     parser.add_argument("--data-dir", type=Path, default=Path("data"))
     parser.add_argument("--output-dir", type=Path, default=Path("outputs/baseline"))
     parser.add_argument("--epochs", type=int, default=5)
@@ -143,10 +144,11 @@ def main():
 
     set_seed(args.seed)
     train_loader, valid_loader = make_dataloaders(
-        args.data_dir, batch_size=args.batch_size, seed=args.seed,
+        args.data_dir, batch_size=args.batch_size, seed=args.seed, model_name=args.model,
     )
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     device_name = torch.cuda.get_device_name(device) if device.type == "cuda" else "CPU"
+    print(f"モデル: {args.model}", flush=True)
     print(f"使用するデバイス: {device_name}", flush=True)
     print(
         f"学習用: {len(train_loader.dataset)}枚 / "
@@ -155,7 +157,9 @@ def main():
     )
 
     # 全パラメータを更新する。毎回ImageNetの重みから新しく学習を始める。
-    model = build_model(pretrained=True).to(device)
+    model = build_model(pretrained=True, model_name=args.model).to(device)
+    parameter_count = sum(parameter.numel() for parameter in model.parameters())
+    print(f"パラメータ数（4クラス用）: {parameter_count:,}", flush=True)
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
 
@@ -163,8 +167,9 @@ def main():
     split_path = args.data_dir / "split.csv"
     shutil.copyfile(split_path, args.output_dir / "split.csv")
     config = {
-        "model": "resnet18",
-        "pretrained_weights": "IMAGENET1K_V1",
+        "model": args.model,
+        "pretrained_weights": get_model_weights(args.model).name,
+        "parameter_count": parameter_count,
         "class_names": CLASS_NAMES,
         "epochs": args.epochs,
         "batch_size": args.batch_size,
@@ -226,6 +231,8 @@ def main():
             best_epoch = epoch
             torch.save(
                 {
+                    "model_name": args.model,
+                    "pretrained_weights": get_model_weights(args.model).name,
                     "model_state_dict": model.state_dict(),
                     "class_names": CLASS_NAMES,
                     "epoch": epoch,
