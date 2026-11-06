@@ -1,0 +1,4 @@
+model,best_epoch,local_valid_auc,kaggle_public_score,kaggle_private_score
+resnet18,2,0.9895350376305053,0.94415,0.93658
+resnet34,4,0.9882615139274571,0.94254,0.94203
+resnet50,3,0.9786932293185993,0.95914,0.93802

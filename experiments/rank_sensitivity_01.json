@@ -1,0 +1,74 @@
+{
+  "method": "paired_stratified_halves_of_fixed_validation_predictions",
+  "scope": "同じ検証画像を小分けにした感度分析。モデルの再学習・新しい画像での評価・交差検証は含まない。",
+  "seed": 42,
+  "partitions": 100,
+  "evaluated_groups": 200,
+  "validation_images": 365,
+  "class_counts": {
+    "healthy": 103,
+    "multiple_diseases": 18,
+    "rust": 125,
+    "scab": 119
+  },
+  "full_validation": {
+    "resnet18": {
+      "mean_auc": 0.9895350376305053,
+      "class_aucs": {
+        "healthy": 0.9973690061513377,
+        "multiple_diseases": 0.9695805315401858,
+        "rust": 0.9943333333333333,
+        "scab": 0.9968572794971647
+      }
+    },
+    "resnet34": {
+      "mean_auc": 0.9882615139274571,
+      "class_aucs": {
+        "healthy": 0.9937004372637664,
+        "multiple_diseases": 0.9718219660582773,
+        "rust": 0.9934333333333333,
+        "scab": 0.994090319054451
+      }
+    },
+    "resnet50": {
+      "mean_auc": 0.9786932293185993,
+      "class_aucs": {
+        "healthy": 0.9947750685540651,
+        "multiple_diseases": 0.9305155299391611,
+        "rust": 0.9971,
+        "scab": 0.992382318781171
+      }
+    }
+  },
+  "input_prediction_sha256": {
+    "resnet18": "7974b7d7870c993fceb621970a39bb33c556196861d083977412c3d230528633",
+    "resnet34": "aaff39d5d95f0bc65539b38d5de2b1722ce54727768a1bef13b83035dbca04c2",
+    "resnet50": "b0039a0d94639cd8e308215a498ba30402859ded47a8cea5fea1421d81e3c368"
+  },
+  "top_counts_including_ties": {
+    "resnet18": 128,
+    "resnet34": 72,
+    "resnet50": 0
+  },
+  "partitions_with_different_winners_between_halves": 72,
+  "first_partition": {
+    "a_images": 181,
+    "b_images": 184,
+    "a_scores": {
+      "resnet18": 0.9970023952704818,
+      "resnet34": 0.991959466736591,
+      "resnet50": 0.9922325832563799
+    },
+    "b_scores": {
+      "resnet18": 0.981945698485288,
+      "resnet34": 0.9857464908014761,
+      "resnet50": 0.9644815973371692
+    },
+    "a_winners": [
+      "resnet18"
+    ],
+    "b_winners": [
+      "resnet34"
+    ]
+  }
+}

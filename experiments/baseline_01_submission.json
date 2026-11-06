@@ -1,10 +1,11 @@
 {
   "run": "baseline_01",
   "reported_on": "2026-11-06",
-  "source": "user_report_after_kaggle_submission",
+  "source": "user_report_and_submission_screenshot",
   "kaggle_displayed_score": 0.93658,
   "kaggle_public_score": 0.94415,
-  "score_label_note": "Scoreは利用者から共有された画面の表記。Private Scoreであるかは未確認。",
+  "kaggle_private_score": 0.93658,
+  "score_label_note": "利用者が共有した提出一覧の画像で、以前Scoreと報告された値がPrivate Scoreと確認できた。",
   "local_valid_auc": 0.9895350376305053,
   "best_epoch": 2,
   "training_commit": "276357c2a87ad39fce94b492c9d7e6523e60f318",
