@@ -6,6 +6,7 @@
 /outputs/
 /runs/
 /wandb/
+/instructor_private/
 *.pt
 *.pth
 *.ckpt
