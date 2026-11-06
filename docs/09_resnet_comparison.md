@@ -93,8 +93,11 @@ python compare_runs.py outputs/baseline_01 outputs/resnet34_01 outputs/resnet50_
 | モデル | 保存先 | 最良検証AUC | Kaggle Public |
 | --- | --- | ---: | ---: |
 | ResNet18 | outputs/baseline_01 | 0.989535 | 0.94415 |
-| ResNet34 | outputs/resnet34_01 | 未実行 | 未提出 |
-| ResNet50 | outputs/resnet50_01 | 未実行 | 未提出 |
+| ResNet34 | outputs/resnet34_01 | 0.988262（epoch 4） | 未提出 |
+| ResNet50 | outputs/resnet50_01 | 0.978693（epoch 3） | 未提出 |
+
+利用者が実行して共有した結果に基づきます。
+クラス別AUCと学習の推移の考察は[比較実験の記録](../experiments/resnet_comparison_01.md)にまとめています。
 
 同じ乱数の設定でも、GPUや実行環境をまたいで完全に同じ数値になるとは限りません。
 まず今回の1回の比較結果を記録し、差が小さい場合は別の乱数で複数回確認することも検討できます。
