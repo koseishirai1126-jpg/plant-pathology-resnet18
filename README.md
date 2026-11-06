@@ -18,7 +18,7 @@
 - GitHubリポジトリ：https://github.com/koseishirai1126-jpg/plant-pathology-resnet18
 - 最初のコミットのGitHubへの送信と、ブラウザ上での反映を確認済みです。
 - 保存モデルを再評価して検証AUC 0.989535を再現し、保存時の予測との一致を確認しました。
-- テスト画像1,821枚を予測し、1,821行・5列の提出CSVを生成・形式確認済みです。次は実行結果の保存とKaggleへの提出です。Kaggleのテストスコアは未測定です。
+- テスト画像1,821枚を予測し、1,821行・5列の提出CSVを生成・形式確認済みです。実行結果を手元に取得し、転送前後のCSV・重みの一致も確認しました。次はKaggleへの提出です。Kaggleのテストスコアは未測定です。
 
 データの詳細とラベルの読み方は[データ確認の記録](docs/01_data.md)を参照してください。
 Datasetのコードの説明と実行方法は[Datasetの作成](docs/02_dataset.md)を参照してください。
@@ -39,6 +39,8 @@ Datasetのコードの説明と実行方法は[Datasetの作成](docs/02_dataset
 | PyTorch | 2.10.0+cu128 |
 | torchvision | 0.25.0+cu128 |
 | scikit-learn | 1.9.1 |
+| NumPy | 2.4.1 |
+| pandas | 3.0.0 |
 | NVIDIAドライバ | 580.95.05 |
 | nvidia-smiのCUDA表示 | 13.0 |
 | GPU 0 | NVIDIA GeForce RTX 5080、約16 GB |
