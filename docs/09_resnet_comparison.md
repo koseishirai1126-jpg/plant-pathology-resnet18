@@ -122,6 +122,9 @@ CUDA_VISIBLE_DEVICES=0 python predict.py --run-dir outputs/resnet50_01
 再評価・予測時にモデル名を手動で指定する必要はありません。
 Kaggleに提出した場合は、同じスコアの表示区分でResNet18の結果と比較します。
 
+今回の実験では再評価・予測・手元への取得とファイルの一致確認まで完了しました。
+手元に用意したモデル名付きの提出ファイルは、outputs/submissions/resnet34_01.csvとresnet50_01.csvです。
+
 ## 参考
 
 - [torchvision 0.25: ResNet18](https://docs.pytorch.org/vision/0.25/models/generated/torchvision.models.resnet18.html)
