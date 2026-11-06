@@ -1,0 +1,13 @@
+{
+  "run": "baseline_01",
+  "reported_on": "2026-11-06",
+  "source": "user_report_after_kaggle_submission",
+  "kaggle_displayed_score": 0.93658,
+  "kaggle_public_score": 0.94415,
+  "score_label_note": "Scoreは利用者から共有された画面の表記。Private Scoreであるかは未確認。",
+  "local_valid_auc": 0.9895350376305053,
+  "best_epoch": 2,
+  "training_commit": "276357c2a87ad39fce94b492c9d7e6523e60f318",
+  "checkpoint_sha256": "d7cff940b0ff69e80c08cc0496ccb4cb37adde98f9da6bfb234114cb053bc62c",
+  "submission_sha256": "56833d2450ce9334981dfa65c998e4c627ba216e769dd8c5f989aa69e7dbb673"
+}

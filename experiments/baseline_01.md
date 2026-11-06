@@ -69,4 +69,39 @@
 | submission.csv | `56833d2450ce9334981dfa65c998e4c627ba216e769dd8c5f989aa69e7dbb673` |
 
 手元での確認結果は`outputs/baseline_01/local_verification.json`に保存しています。
-Kaggleへの提出・採点はまだ確認していません。次にテストスコアを記録します。
+
+## Kaggleの評価結果
+
+2026年11月6日、利用者から提出後のスコアが共有されました。
+
+| 評価対象・画面表示 | スコア |
+| --- | ---: |
+| ローカル検証用365枚 | 0.989535 |
+| Kaggle Public score | 0.94415 |
+| Kaggle Score（共有された画面表記） | 0.93658 |
+
+`Score`は利用者から報告された表記のまま記録しています。
+Private Scoreという区分であるかは、報告内容だけでは確定していません。
+機械で読み込める記録は[提出結果JSON](baseline_01_submission.json)に保存しています。
+
+ローカル検証AUCとPublic scoreの差は約0.04539、Scoreとの差は約0.05296です。
+今回の1回の分割では、ローカルの検証スコアがテスト側のスコアより高く出ました。
+この差の原因が、過学習・分割のばらつき・画像の分布の違いなどのどれによるかは確定していません。
+画像ID・クラス順・保存重み・提出CSVの整合性は、これまでの確認を通過しています。
+
+## 教育用ベースラインとしての位置付け
+
+今回の目的に対する判断として、短時間で動く単純な比較基準として使います。
+モデルの学習・保存・予測・提出を一通り理解でき、ランダムな画像変換や学習条件の見直しなどの改善課題を残しています。
+今後の改良実験は別の実行結果フォルダに保存し、この実行のスコアと区別します。
+
+後輩との比較では、同じ分割CSVを使った検証結果と、同じKaggleの評価欄を比較します。
+最初の提出目標の例は「Public scoreで0.94415を超える」です。
+スコアに加えて、変えた内容と、それがどう影響すると考えたかも記録します。
+検証方法そのものを調べる実験では、別の乱数や層化交差検証でスコアの変動を確認することも課題にできます。
+
+## 参考
+
+- [コンペの評価方法](https://www.kaggle.com/competitions/plant-pathology-2020-fgvc7)
+- [PyTorch公式の転移学習とデータ拡張の例](https://docs.pytorch.org/tutorials/beginner/transfer_learning_tutorial.html)
+- [scikit-learn: StratifiedKFold](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedKFold.html)
